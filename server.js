@@ -1,6 +1,5 @@
 var path = require('path'),
     express = require('express'),
-    browserSync = require('browser-sync'),
     nunjucks = require('express-nunjucks'),
     routes = require(__dirname + '/app/routes.js'),
     app = express(),
@@ -9,7 +8,8 @@ var path = require('path'),
     port = (process.env.PORT || config.port),
     packageJson = require(__dirname + '/package.json'),
     env      = process.env.NODE_ENV || 'development';
-    env      = env.toLowerCase();
+
+env = env.toLowerCase();
 
 // Application settings
 app.set('view engine', 'html');

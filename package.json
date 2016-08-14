@@ -11,8 +11,6 @@
   "dependencies": {
     "body-parser": "^1.14.1",
     "bootstrap-sass": "^3.3.6",
-    "browser-sync": "^2.11.1",
-    "consolidate": "0.x",
     "express": "4.13.3",
     "express-nunjucks": "^0.9.3",
     "express-writer": "0.0.4",
@@ -25,6 +23,8 @@
     "grunt-sync": "^0.5.1",
     "hogan.js": "3.0.2",
     "minimist": "0.0.8",
-    "readdir": "0.0.6"
+    "moment": "^2.14.1",
+    "readdir": "0.0.6",
+    "underscore": "^1.8.3"
   }
 }

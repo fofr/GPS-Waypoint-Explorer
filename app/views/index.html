@@ -5,5 +5,71 @@ Title
 {% endblock %}
 
 {% block content %}
-Index
+
+<div class="row">
+  <div class="col-md-2">
+    <h3>Tortoises</h3>
+    <ul class="list-group">
+    {% for tortoise, attr in tortoises %}
+      <li class="list-group-item">
+        <a href="?tortoise={{ tortoise }}">{{ tortoise }}</a>
+        <span class="badge badge-default">{{ attr.count }}</span>
+      </li>
+    {% endfor %}
+    </ul>
+  </div>
+  <div class="col-md-10">
+    <div id="map"></div>
+  </div>
+</div>
+
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  #map {
+    height: 800px;
+  }
+</style>
+
+    <script>
+      var locations = [
+        {% for waypoint in waypoints %}
+          {% if not loop.first %},{% endif %}
+          ['{{ waypoint.name }}', {{ waypoint.lat }}, {{ waypoint.long }}, '{{ waypoint.color }}', '{{ waypoint.dateString }}', '{{ waypoint.tortoise }}']
+        {% endfor %}
+      ];
+
+      function initMap() {
+        var myLatLng = {lat: -4.394904, lng: 55.247006};
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15,
+          center: myLatLng
+        });
+
+        for (var i = 0, l = locations.length; i < l; i++) {
+          var location = locations[i];
+          var marker = new google.maps.Marker({
+            position: {lat: location[1], lng: location[2]},
+            map: map,
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 10,
+              fillColor: location[3],
+              fillOpacity: 1,
+              strokeWeight: 1,
+              strokeColor: '#aaa'
+            },
+            title: location[5] + ': ' + location[4]
+          });
+        }
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?callback=initMap">
+    </script>
+
 {% endblock %}
