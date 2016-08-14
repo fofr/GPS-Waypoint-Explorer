@@ -21,16 +21,22 @@ for (var i = 0; i < lines.length; i++) {
         year = date.substring(0,4),
         month = parseInt(date.substring(4,6), 10) - 1,
         day = parseInt(date.substring(6,8), 10) + 1,
-        dateString = m.format('D MMM YYYY');
+        dateString = m.format('D MMM YYYY'),
+        age = moment('20160814', 'YYYYMMDD').diff(m, 'months');
 
-    waypoints.push({
-      name: name,
-      lat: lat,
-      long: long,
-      tortoise: tortoise,
-      dateString: dateString,
-      date: new Date(year, month, day)
-    });
+    if (tortoise) {
+      waypoints.push({
+        name: name,
+        lat: lat,
+        long: long,
+        tortoise: tortoise,
+        dateString: dateString,
+        date: new Date(year, month, day),
+        opacity: 1 / age
+      });
+    } else {
+      console.log(name);
+    }
   }
 }
 
@@ -43,11 +49,19 @@ for (var i = 0, l = waypoints.length; i < l; i++) {
   if (tortoises[tortoise]) {
     tortoises[tortoise].count = tortoises[tortoise].count + 1;
   } else {
-    tortoises[tortoise] = { count: 1, color: colors[colorIndex]};
+    tortoises[tortoise] = { name: tortoise, count: 1, color: colors[colorIndex]};
     colorIndex++;
   }
 
   waypoint.color = tortoises[tortoise].color;
+}
+
+var tortoiseKeys = Object.keys(tortoises).sort();
+var sortedTortoises = [];
+
+for (var i = 0, l = tortoiseKeys.length; i < l; i++) {
+  var key = tortoiseKeys[i];
+  sortedTortoises.push(tortoises[key]);
 }
 
 router.get('/', function (req, res) {
@@ -65,7 +79,7 @@ router.get('/', function (req, res) {
 
   res.render('index', {
     waypoints: filteredWaypoints,
-    tortoises: tortoises
+    tortoises: sortedTortoises
   });
 });
 
