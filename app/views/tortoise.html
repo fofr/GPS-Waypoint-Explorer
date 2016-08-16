@@ -15,6 +15,12 @@
     Carapace Length: {{ tortoise.carapaceLength }}<br />
     Carapace Width: {{ tortoise.carapaceWidth }}<br />
     Notes: {{ tortoise.notes }}<br />
+
+    <ul>
+    {% for point in waypoints %}
+      <li>{{ point.dateString }}</li>
+    {% endfor %}
+    </ul>
   </div>
   <div class="col-md-8">
     <div class="map-container">

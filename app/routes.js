@@ -15,6 +15,8 @@ for (var i = 0, l = tortoiseKeys.length; i < l; i++) {
   sortedTortoises.push(tortoises[key]);
 }
 
+var sampleDates = _.chain(waypoints).map(function(w){ return w.date.format('YYYY-MM-DD'); }).uniq();
+
 router.get('/', function (req, res) {
   res.render('index', {
     tortoises: sortedTortoises
@@ -36,15 +38,21 @@ router.get('/tortoise/:number', function (req, res) {
 
 router.get('/map', function (req, res) {
   var tortoise = req.query.tortoise,
-      filteredWaypoints = [];
+      date = req.query.date,
+      filteredWaypoints = waypoints;
+
+  if (date) {
+    var m = moment(date, 'YYYY-MM-DD');
+    filteredWaypoints = _.filter(filteredWaypoints, function(waypoint){
+      return waypoint.date.isSame(date, 'day');
+    });
+  }
 
   if (tortoise) {
      var tortoiseArray = tortoise.split(',');
-    filteredWaypoints = _.filter(waypoints, function(waypoint){
+    filteredWaypoints = _.filter(filteredWaypoints, function(waypoint){
       return _.contains(tortoiseArray, waypoint.tortoise);
     });
-  } else {
-    filteredWaypoints = waypoints;
   }
 
   res.render('map', {

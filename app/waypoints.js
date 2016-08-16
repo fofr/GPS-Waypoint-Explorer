@@ -28,14 +28,13 @@ for (var i = 0; i < lines.length; i++) {
         long: long,
         tortoise: tortoise,
         dateString: dateString,
-        date: new Date(year, month, day),
+        date: m,
         age: age,
         opacity: 1
       });
-    } else {
-      console.log(name);
     }
   }
 }
 
+waypoints = _.sortBy(waypoints, function(w) { return w.date; })
 module.exports = waypoints;
