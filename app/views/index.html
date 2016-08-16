@@ -1,72 +1,36 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="row">
-  <div class="col-md-2">
-    <h3 class="remove-top-margin">Tortoises</h3>
-    <ul class="list-group">
-    {% for tortoise in tortoises %}
-      <li class="list-group-item">
-        <a href="?tortoise={{ tortoise.name }}">{{ tortoise.name }}</a>
-        <span class="badge badge-default">{{ tortoise.count }}</span>
-        <span class="badge badge-default" style="background-color: {{ tortoise.color }}; border: 1px solid #aaa">&nbsp;</span>
-      </li>
+
+<h1 class="add-bottom-margin">Tortoises</h1>
+<table class="table table-bordered">
+  <thead>
+    <tr class="table-header">
+      <th>Tortoise</th>
+      <th>GPS</th>
+      <th>Name</th>
+      <th>Sex</th>
+      <th>V3 Scute Width</th>
+      <th>V3 Scute Length</th>
+      <th>Carapace Width</th>
+      <th>Carapace Length</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in tortoises %}
+    <tr>
+      <td><a href="/tortoise/{{ t.number }}">{{ t.number }}</a></td>
+      <td><a href="/map?tortoise={{ t.number }}">{{ t.count }}&nbsp;points</a></td>
+      <td>{{ t.name }}</td>
+      <td>{{ t.sex }}</td>
+      <td>{{ t.v3ScuteWidth }}</td>
+      <td>{{ t.v3ScuteLength }}</td>
+      <td>{{ t.carapaceLength }}</td>
+      <td>{{ t.carapaceWidth }}</td>
+      <td>{{ t.notes }}</td>
+    </tr>
     {% endfor %}
-    </ul>
-  </div>
-  <div class="col-md-10">
-    <div class="map-container">
-      <div id="map"></div>
-    </div>
-  </div>
-</div>
-
-<style>
-  html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-  #map {
-    height: 100%;
-    width: 100%;
-  }
-</style>
-
-    <script>
-      var locations = [
-        {% for waypoint in waypoints %}
-          {% if not loop.first %},{% endif %}
-          ['{{ waypoint.name }}', {{ waypoint.lat }}, {{ waypoint.long }}, '{{ waypoint.color }}', '{{ waypoint.dateString }}', '{{ waypoint.tortoise }}', {{ waypoint.opacity }}]
-        {% endfor %}
-      ];
-
-      function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 16,
-          center: {lat: -4.390904, lng: 55.244006},
-          mapTypeId: 'terrain'
-        });
-
-        for (var i = 0, l = locations.length; i < l; i++) {
-          var location = locations[i];
-          var marker = new google.maps.Marker({
-            position: {lat: location[1], lng: location[2]},
-            map: map,
-            icon: {
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 10,
-              fillColor: location[3],
-              fillOpacity: location[6],
-              strokeWeight: 1,
-              strokeColor: '#aaa'
-            },
-            title: location[5] + ': ' + (1/location[6]) + ' months ago – '+ location[4]
-          });
-        }
-      }
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?callback=initMap">
-    </script>
+  </tbody>
+</table>
 
 {% endblock %}

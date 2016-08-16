@@ -3,58 +3,9 @@ var router = express.Router();
 var fs = require('fs');
 var _ = require('underscore');
 var moment = require('moment');
-var colors = require('./colors');
 
-var waypointFile = fs.readFileSync('data/data.csv');
-var lines = waypointFile.toString().split('\n');
-var waypoints = [];
-
-for (var i = 0; i < lines.length; i++) {
-  var line = lines[i].toString().split(',');
-  if (line.length > 1) {
-    var name = line[1],
-        lat = line[2],
-        long = line[3],
-        tortoise = line[1].split('T')[0],
-        date = line[1].split('T')[1],
-        m = moment(date, 'YYYYMMDD'),
-        year = date.substring(0,4),
-        month = parseInt(date.substring(4,6), 10) - 1,
-        day = parseInt(date.substring(6,8), 10) + 1,
-        dateString = m.format('D MMM YYYY'),
-        age = moment('20160814', 'YYYYMMDD').diff(m, 'months');
-
-    if (tortoise) {
-      waypoints.push({
-        name: name,
-        lat: lat,
-        long: long,
-        tortoise: tortoise,
-        dateString: dateString,
-        date: new Date(year, month, day),
-        opacity: 1 / age
-      });
-    } else {
-      console.log(name);
-    }
-  }
-}
-
-var tortoises = {},
-    colorIndex = 0;
-for (var i = 0, l = waypoints.length; i < l; i++) {
-  var waypoint = waypoints[i],
-      tortoise = waypoint.tortoise;
-
-  if (tortoises[tortoise]) {
-    tortoises[tortoise].count = tortoises[tortoise].count + 1;
-  } else {
-    tortoises[tortoise] = { name: tortoise, count: 1, color: colors[colorIndex]};
-    colorIndex++;
-  }
-
-  waypoint.color = tortoises[tortoise].color;
-}
+var waypoints = require('./waypoints');
+var tortoises = require('./tortoises');
 
 var tortoiseKeys = Object.keys(tortoises).sort();
 var sortedTortoises = [];
@@ -65,6 +16,25 @@ for (var i = 0, l = tortoiseKeys.length; i < l; i++) {
 }
 
 router.get('/', function (req, res) {
+  res.render('index', {
+    tortoises: sortedTortoises
+  });
+});
+
+router.get('/tortoise/:number', function (req, res) {
+  var number = req.params.number,
+      tortoise = tortoises[number],
+      filteredWaypoints = _.filter(waypoints, function(waypoint){
+        return number == waypoint.tortoise;
+      });
+
+  res.render('tortoise', {
+    tortoise: tortoise,
+    waypoints: filteredWaypoints
+  });
+});
+
+router.get('/map', function (req, res) {
   var tortoise = req.query.tortoise,
       filteredWaypoints = [];
 
@@ -77,7 +47,7 @@ router.get('/', function (req, res) {
     filteredWaypoints = waypoints;
   }
 
-  res.render('index', {
+  res.render('map', {
     waypoints: filteredWaypoints,
     tortoises: sortedTortoises
   });

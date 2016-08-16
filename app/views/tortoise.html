@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<ol class="breadcrumb">
+  <li><a href="/">Tortoises</a></li>
+  <li class="active">Tortoise {{ tortoise.number }}</li>
+</ol>
+
+<h1 class="add-bottom-margin">Tortoise {{ tortoise.number }}</h1>
+<div class="row">
+  <div class="col-md-4">
+    Sex: {{ tortoise.sex }}<br />
+    Name: {{ tortoise.name }}<br />
+    V3 Scute Width: {{ tortoise.v3ScuteWidth }}<br />
+    V3 Scute Length: {{ tortoise.v3ScuteLength }}<br />
+    Carapace Length: {{ tortoise.carapaceLength }}<br />
+    Carapace Width: {{ tortoise.carapaceWidth }}<br />
+    Notes: {{ tortoise.notes }}<br />
+  </div>
+  <div class="col-md-8">
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+  </div>
+
+{% include "partials/map-js.html" %}
+{% endblock %}
