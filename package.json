@@ -14,6 +14,7 @@
     "express": "4.13.3",
     "express-nunjucks": "^0.9.3",
     "express-writer": "0.0.4",
+    "geolib": "^2.0.21",
     "grunt": "0.4.5",
     "grunt-cli": "0.1.13",
     "grunt-concurrent": "0.4.3",

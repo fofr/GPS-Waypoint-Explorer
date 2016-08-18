@@ -30,9 +30,19 @@ router.get('/tortoise/:number', function (req, res) {
         return number == waypoint.tortoise;
       });
 
+  var distances = tortoise.distances;
+  var distanceByTortoise = _.groupBy(distances, 'tortoise');
+  var averageDistanceFromTortoise = _.map(distanceByTortoise, function(d, key) {
+    var sum = _.reduce(d, function(memo, e) { return memo + e.distance }, 0),
+        average = Math.floor(sum / d.length);
+
+    return {average: average, tortoise: key, count: d.length };
+  });
+
   res.render('tortoise', {
     tortoise: tortoise,
-    waypoints: filteredWaypoints
+    waypoints: filteredWaypoints,
+    averageDistanceFromTortoise: _.sortBy(averageDistanceFromTortoise, 'average')
   });
 });
 
